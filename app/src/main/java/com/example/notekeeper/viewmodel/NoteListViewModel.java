@@ -11,12 +11,12 @@ import com.example.notekeeper.repository.NoteRepository;
 
 import java.util.List;
 
-public class NoteViewModel extends AndroidViewModel {
+public class NoteListViewModel extends AndroidViewModel {
 
     private NoteRepository noteRepository;
     private LiveData<List<Note>> allNotes;
 
-    public NoteViewModel(@NonNull Application application) {
+    public NoteListViewModel(@NonNull Application application) {
         super(application);
         initialize();
     }

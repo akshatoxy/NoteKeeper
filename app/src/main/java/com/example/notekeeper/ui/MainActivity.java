@@ -1,17 +1,15 @@
 package com.example.notekeeper.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.example.notekeeper.R;
-import com.example.notekeeper.viewmodel.NoteViewModel;
+import com.example.notekeeper.viewmodel.NoteListViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
-    private NoteViewModel noteViewModel;
+    private NoteListViewModel noteListViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
