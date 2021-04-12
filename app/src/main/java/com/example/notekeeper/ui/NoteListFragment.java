@@ -6,13 +6,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.example.notekeeper.R;
 import com.example.notekeeper.databinding.FragmentNoteListBinding;
 import com.example.notekeeper.viewmodel.NoteListViewModel;
 
@@ -43,5 +42,8 @@ public class NoteListFragment extends Fragment {
 
         noteListAdapter = new NoteListAdapter();
         binding.noteList.setAdapter(noteListAdapter);
+
+        binding.addNoteBtn.setOnClickListener(v -> NavHostFragment.findNavController(this).navigate(NoteListFragmentDirections.actionNoteListFragmentToNoteFragment()));
     }
+
 }

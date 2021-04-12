@@ -1,4 +1,4 @@
-package com.example.notekeeper.Util;
+package com.example.notekeeper.util;
 
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
