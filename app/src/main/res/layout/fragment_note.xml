@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
-            name="note"
-            type="com.example.notekeeper.model.Note"/>
+            name="noteViewModel"
+            type="com.example.notekeeper.viewmodel.NoteViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,7 +14,27 @@
         android:layout_height="match_parent"
         tools:context=".ui.NoteFragment">
 
-        <!-- TODO: Update blank fragment layout -->
+        <TextView
+            android:id="@+id/priority_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/very_high"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/horizontal_color_picker"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.example.notekeeper.ui.horizontalcolorpicker.HorizontalColorPicker
+            android:id="@+id/horizontal_color_picker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+        </com.example.notekeeper.ui.horizontalcolorpicker.HorizontalColorPicker>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
