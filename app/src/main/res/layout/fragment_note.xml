@@ -10,31 +10,78 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/note_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/app_background"
         tools:context=".ui.NoteFragment">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hintEnabled="false"
+            app:boxBackgroundMode="none"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/note_title_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/app_background"
+                android:hint="@string/title"
+                android:inputType="text"
+                android:maxLines="1"
+                android:textSize="18sp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:boxBackgroundMode="none"
+            app:hintEnabled="false"
+            app:layout_constraintBottom_toTopOf="@+id/priority_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/note_desc_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/app_background"
+                android:gravity="top"
+                android:hint="@string/write_your_note_here"
+                android:inputType="textMultiLine"
+                android:isScrollContainer="true"
+                android:textSize="16sp" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/priority_text"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:text="@string/very_high"
             android:textSize="16sp"
+            android:gravity="center_horizontal"
+            android:background="@color/app_background"
             app:layout_constraintBottom_toTopOf="@+id/horizontal_color_picker"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <com.example.notekeeper.ui.horizontalcolorpicker.HorizontalColorPicker
             android:id="@+id/horizontal_color_picker"
+            android:background="@color/app_background"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-        </com.example.notekeeper.ui.horizontalcolorpicker.HorizontalColorPicker>
+            app:layout_constraintStart_toStartOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

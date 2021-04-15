@@ -1,5 +1,7 @@
 package com.example.notekeeper.ui;
 
+import android.content.Context;
+import android.graphics.Point;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,9 +10,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.example.notekeeper.R;
@@ -38,9 +42,18 @@ public class NoteFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        recyclerView = view.findViewById(R.id.recyclerView);
 
+        recyclerView = view.findViewById(R.id.recyclerView);
         setUpHorizontalPicker();
+
+        getFocus(binding.noteDescText);
+    }
+
+    void getFocus(View view){
+        if(view.requestFocus()){
+            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.showSoftInput(binding.noteDescText, InputMethodManager.SHOW_IMPLICIT);
+        }
     }
 
     void setUpHorizontalPicker(){
