@@ -21,6 +21,20 @@ public class PriorityUtils {
         }
     }
 
+    public static int getPriorityInt(String text){
+        if (text.equals("Very Low")){
+            return 0;
+        }else if (text.equals("Low")) {
+            return 1;
+        } else if (text.equals("Medium")) {
+            return 2;
+        } else if (text.equals("High")) {
+            return 3;
+        } else {
+            return 4;
+        }
+    }
+
     public static int getPriorityColor(Context context, int priority) {
         if (priority == 0) {
             return ContextCompat.getColor(context, R.color.priority_1);

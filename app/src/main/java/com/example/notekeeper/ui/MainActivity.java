@@ -29,8 +29,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-//        NavigationUI.setupActionBarWithNavController(this, navController);
         NavigationUI.setupWithNavController(toolbar, navController);
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             toolbar.setTitle(destination.getLabel());

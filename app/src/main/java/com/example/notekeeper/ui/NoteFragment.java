@@ -1,27 +1,30 @@
 package com.example.notekeeper.ui;
 
 import android.content.Context;
-import android.graphics.Point;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.notekeeper.R;
 import com.example.notekeeper.databinding.FragmentNoteBinding;
+import com.example.notekeeper.model.Note;
 import com.example.notekeeper.ui.horizontalcolorpicker.PickerAdapter;
 import com.example.notekeeper.ui.horizontalcolorpicker.PickerLinearLayoutManager;
+import com.example.notekeeper.util.DateUtils;
 import com.example.notekeeper.util.PriorityUtils;
 import com.example.notekeeper.util.ScreenUtils;
 import com.example.notekeeper.viewmodel.NoteViewModel;
@@ -33,6 +36,9 @@ public class NoteFragment extends Fragment {
     private FragmentNoteBinding binding;
     int noteID;
 
+    private NoteViewModelFactory noteViewModelFactory;
+    private NoteViewModel noteViewModel;
+
     public NoteFragment() {
     }
 
@@ -40,6 +46,7 @@ public class NoteFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentNoteBinding.inflate(inflater);
+        setHasOptionsMenu(true);
         return binding.getRoot();
     }
 
@@ -56,12 +63,35 @@ public class NoteFragment extends Fragment {
 
         getFocus(binding.noteDescText);
 
-        NoteViewModelFactory noteViewModelFactory = new NoteViewModelFactory(getActivity().getApplication(), noteID);
-        NoteViewModel noteViewModel = new ViewModelProvider(this, noteViewModelFactory).get(NoteViewModel.class);
+        noteViewModelFactory = new NoteViewModelFactory(getActivity().getApplication(), noteID);
+        noteViewModel = new ViewModelProvider(this, noteViewModelFactory).get(NoteViewModel.class);
 
         binding.setLifecycleOwner(this);
         binding.setNoteViewModel(noteViewModel);
+
+        observeData();
     }
+
+    private void observeData() {
+        noteViewModel.getSaveThisNote().observe(getViewLifecycleOwner(), isClicked -> {
+            if(isClicked) {
+                noteViewModel.getNote().setValue(new Note(binding.noteTitleText.getText().toString() , binding.noteDescText.getText().toString() , PriorityUtils.getPriorityInt(binding.priorityText.getText().toString()),
+                        DateUtils.getCurrentDate()));
+                noteViewModel.saveNote();
+                noteViewModel.getSaveThisNote().setValue(false);
+                goToNoteList();
+            }
+        });
+
+        noteViewModel.getNoteFromDB().observe(getViewLifecycleOwner(), note ->{
+            noteViewModel.getNote().setValue(note);
+        });
+    }
+
+    void goToNoteList(){
+        NavHostFragment.findNavController(this).navigate(NoteFragmentDirections.actionNoteFragmentToNoteListFragment());
+    }
+
 
     void getFocus(View view){
         if(view.requestFocus()){
@@ -87,5 +117,22 @@ public class NoteFragment extends Fragment {
         int padding = ScreenUtils.getScreenWidth(getContext())/2 -
                 ScreenUtils.dpToPx(getContext(), 63);
         recyclerView.setPadding(padding, 0, padding, 0);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.note_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.action_done){
+            noteViewModel.getSaveThisNote().setValue(true);
+            Toast.makeText(getContext(), "Note saved :)", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

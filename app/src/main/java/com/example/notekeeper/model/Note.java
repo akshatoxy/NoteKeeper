@@ -51,6 +51,8 @@ public class Note {
         return "Note{" +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
+                ", priority='" + priority + '\'' +
+                ", createdOn='" + createdOn + '\'' +
                 '}';
     }
 }

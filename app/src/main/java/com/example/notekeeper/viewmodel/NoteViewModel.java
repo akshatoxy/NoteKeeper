@@ -12,16 +12,46 @@ import com.example.notekeeper.model.Note;
 import com.example.notekeeper.repository.NoteRepository;
 
 public class NoteViewModel extends AndroidViewModel {
-    private LiveData<Note> note;
+    private MutableLiveData<Note> note = new MutableLiveData<>();
+    private LiveData<Note> noteFromDB;
     private NoteRepository noteRepository;
 
-    public NoteViewModel(@NonNull Application application, int pos) {
+    private MutableLiveData<Boolean> saveThisNote = new MutableLiveData<>();
+    private int noteId;
+
+    public NoteViewModel(@NonNull Application application, int id) {
         super(application);
-        noteRepository = new NoteRepository(getApplication());
-        note =  noteRepository.getNoteById(pos);
+
+        this.noteId = id;
+        this.noteRepository = new NoteRepository(getApplication());
+        this.noteFromDB =  noteRepository.getNoteById(id);
+        this.saveThisNote.setValue(false);
     }
 
-    public LiveData<Note> getNote() {
+
+    public void saveNote() {
+        Note thisNote = note.getValue();
+        Log.d("tzuyu", thisNote.getTitle() + " " + thisNote.getDescription() + " " + thisNote.getPriority() + " " + thisNote.getCreatedOn());
+        if(noteId == 0){
+            Log.d("tzuyu",String.valueOf(noteId));
+            noteRepository.insert(thisNote);
+        }else{
+            Log.d("tzuyu",String.valueOf(noteId));
+            thisNote.setId(noteId);
+            noteRepository.update(thisNote);
+        }
+    }
+
+    public MutableLiveData<Note> getNote() {
         return note;
     }
+
+    public LiveData<Note> getNoteFromDB() {
+        return noteFromDB;
+    }
+
+    public MutableLiveData<Boolean> getSaveThisNote() {
+        return saveThisNote;
+    }
+
 }
