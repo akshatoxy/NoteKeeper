@@ -10,13 +10,16 @@
     <color name="gray">#4E4C4C</color>
 
     <!-- App Colors -->
-    <color name="app_background">#ff7171</color>
-    <color name="toolbar_background">#ff7171</color>
+    <color name="app_background">#FF7171</color>
+    <color name="toolbar_background">#FF7171</color>
+    <color name="text_color">#FAEAEA</color>
+    <color name="icon_color">#FAEAEA</color>
+    <color name="accent">#ffcc80</color>
 
     <!-- Priority Colors -->
-    <color name="priority_1">#A54CE4</color>
-    <color name="priority_2">#ffe227</color>
+    <color name="priority_5">#A54CE4</color>
+    <color name="priority_4">#ffe227</color>
     <color name="priority_3">#16c79a</color>
-    <color name="priority_4">#7CE4ED</color>
-    <color name="priority_5">#fdbaf8</color>
+    <color name="priority_2">#7CE4ED</color>
+    <color name="priority_1">#fdbaf8</color>
 </resources>

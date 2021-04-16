@@ -14,8 +14,11 @@ import com.example.notekeeper.model.Note;
 
 public class NoteListAdapter extends ListAdapter<Note, NoteListAdapter.NoteListViewHolder> {
 
-    protected NoteListAdapter() {
+    private NoteClickListener clickListener;
+
+    protected NoteListAdapter(NoteClickListener clickListener) {
         super(new NoteListDiffUtil());
+        this.clickListener = clickListener;
     }
 
     @NonNull
@@ -27,7 +30,7 @@ public class NoteListAdapter extends ListAdapter<Note, NoteListAdapter.NoteListV
 
     @Override
     public void onBindViewHolder(@NonNull NoteListViewHolder holder, int position) {
-        holder.bind(getItem(position));
+        holder.bind(getItem(position), clickListener);
     }
 
 
@@ -39,8 +42,9 @@ public class NoteListAdapter extends ListAdapter<Note, NoteListAdapter.NoteListV
             this.binding = binding;
         }
 
-        public void bind(Note note){
+        public void bind(Note note, NoteClickListener clickListener){
             binding.setNote(note);
+            binding.getRoot().setOnClickListener(v -> clickListener.onCLick(note.getId()));
         }
     }
 }

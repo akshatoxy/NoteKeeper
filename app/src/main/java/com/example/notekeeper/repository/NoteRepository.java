@@ -37,6 +37,10 @@ public class NoteRepository {
         new DeleteAllNotesTask(noteDao).execute();
     }
 
+    public LiveData<Note> getNoteById(int noteId) {
+        return noteDao.getNote(noteId);
+    }
+
     public LiveData<List<Note>> getAllNotes() {
         return allNotes;
     }

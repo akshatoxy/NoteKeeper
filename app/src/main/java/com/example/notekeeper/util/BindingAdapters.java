@@ -1,5 +1,7 @@
 package com.example.notekeeper.util;
 
+import android.util.Log;
+
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.BindingAdapter;
@@ -23,28 +25,14 @@ public class BindingAdapters {
 
 
     @BindingAdapter("priorityColor")
-    public static void bindCradViewPriorityBackground(CardView cardView, int priority){
-        switch (priority){
-            case 1:{
-                cardView.setBackgroundColor(ContextCompat.getColor(cardView.getContext(), R.color.priority_1));
-                break;
-            }
-            case 2:{
-                cardView.setBackgroundColor(ContextCompat.getColor(cardView.getContext(), R.color.priority_2));
-                break;
-            }
-            case 3:{
-                cardView.setBackgroundColor(ContextCompat.getColor(cardView.getContext(), R.color.priority_3));
-                break;
-            }
-            case 4:{
-                cardView.setBackgroundColor(ContextCompat.getColor(cardView.getContext(), R.color.priority_4));
-                break;
-            }
-            case 5:{
-                cardView.setBackgroundColor(ContextCompat.getColor(cardView.getContext(), R.color.priority_5));
-                break;
-            }
+    public static void bindCardViewPriorityBackground(CardView cardView, int priority){
+        cardView.setBackgroundColor(PriorityUtils.getPriorityColor(cardView.getContext(), priority));
+    }
+
+    @BindingAdapter("setPos")
+    public static void bindRecyclerViewWithPriority(RecyclerView view, Integer priority){
+        if(priority != null) {
+            view.scrollToPosition(priority);
         }
     }
 

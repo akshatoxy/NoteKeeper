@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -23,11 +24,14 @@ import com.example.notekeeper.ui.horizontalcolorpicker.PickerAdapter;
 import com.example.notekeeper.ui.horizontalcolorpicker.PickerLinearLayoutManager;
 import com.example.notekeeper.util.PriorityUtils;
 import com.example.notekeeper.util.ScreenUtils;
+import com.example.notekeeper.viewmodel.NoteViewModel;
+import com.example.notekeeper.viewmodel.NoteViewModelFactory;
 
 public class NoteFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private FragmentNoteBinding binding;
+    int noteID;
 
     public NoteFragment() {
     }
@@ -43,10 +47,20 @@ public class NoteFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        recyclerView = view.findViewById(R.id.recyclerView);
+        if(getArguments() != null){
+            noteID = NoteFragmentArgs.fromBundle(getArguments()).getNoteId();
+        }
+
+        recyclerView = view.findViewById(R.id.horizontal_color_picker);
         setUpHorizontalPicker();
 
         getFocus(binding.noteDescText);
+
+        NoteViewModelFactory noteViewModelFactory = new NoteViewModelFactory(getActivity().getApplication(), noteID);
+        NoteViewModel noteViewModel = new ViewModelProvider(this, noteViewModelFactory).get(NoteViewModel.class);
+
+        binding.setLifecycleOwner(this);
+        binding.setNoteViewModel(noteViewModel);
     }
 
     void getFocus(View view){

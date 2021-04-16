@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,10 +41,14 @@ public class NoteListFragment extends Fragment {
         binding.setLifecycleOwner(this);
         binding.setNoteListViewModel(noteListViewModel);
 
-        noteListAdapter = new NoteListAdapter();
+        noteListAdapter = new NoteListAdapter(this::goToNote);
         binding.noteList.setAdapter(noteListAdapter);
 
-        binding.addNoteBtn.setOnClickListener(v -> NavHostFragment.findNavController(this).navigate(NoteListFragmentDirections.actionNoteListFragmentToNoteFragment()));
+        binding.addNoteBtn.setOnClickListener(v -> goToNote(0));
+    }
+
+    private void goToNote(int noteId){
+        NavHostFragment.findNavController(this).navigate(NoteListFragmentDirections.actionNoteListFragmentToNoteFragment().setNoteId(noteId));
     }
 
 }

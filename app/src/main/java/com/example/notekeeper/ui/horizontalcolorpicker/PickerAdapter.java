@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.notekeeper.R;
+import com.example.notekeeper.util.PriorityUtils;
 
 import java.util.ArrayList;
 
@@ -21,11 +22,11 @@ public class PickerAdapter extends RecyclerView.Adapter<PickerAdapter.PickViewHo
     private Context context;
     private ArrayList<Integer> data = new ArrayList<Integer>(){
         {
+            add(0);
             add(1);
             add(2);
             add(3);
             add(4);
-            add(5);
         }
     };
 
@@ -39,22 +40,8 @@ public class PickerAdapter extends RecyclerView.Adapter<PickerAdapter.PickViewHo
 
     @Override
     public void onBindViewHolder(@NonNull PickViewHolder holder, int position) {
-        holder.imageView.setColorFilter(getPriorityColor(position));
+        holder.imageView.setColorFilter(PriorityUtils.getPriorityColor(context, position));
         holder.itemView.setOnClickListener(v -> callback.onItemClicked(v));
-    }
-
-    public int getPriorityColor(int pos){
-        if(pos == 0) {
-            return ContextCompat.getColor(context, R.color.priority_1);
-        }else if(pos == 1){
-            return ContextCompat.getColor(context, R.color.priority_2);
-        }else if(pos == 2){
-            return ContextCompat.getColor(context, R.color.priority_3);
-        }else if(pos == 3){
-            return ContextCompat.getColor(context, R.color.priority_4);
-        }else {
-            return ContextCompat.getColor(context, R.color.priority_5);
-        }
     }
 
     @Override

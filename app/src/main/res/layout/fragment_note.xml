@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="com.example.notekeeper.util.PriorityUtils"/>
         <variable
             name="noteViewModel"
             type="com.example.notekeeper.viewmodel.NoteViewModel"/>
@@ -31,6 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/app_background"
+                android:text="@{noteViewModel.note.title}"
                 android:hint="@string/title"
                 android:inputType="text"
                 android:maxLines="1"
@@ -53,6 +55,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/app_background"
                 android:gravity="top"
+                android:text="@{noteViewModel.note.description}"
                 android:hint="@string/write_your_note_here"
                 android:inputType="textMultiLine"
                 android:isScrollContainer="true"
@@ -65,7 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
-            android:text="@string/very_high"
+            android:text="@{ PriorityUtils.getPriorityText(noteViewModel.note.priority) }"
             android:textSize="16sp"
             android:gravity="center_horizontal"
             android:background="@color/app_background"
@@ -73,15 +76,20 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <com.example.notekeeper.ui.horizontalcolorpicker.HorizontalColorPicker
+
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/horizontal_color_picker"
             android:background="@color/app_background"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="20dp"
+            android:layout_marginBottom="10dp"
+            android:clipToPadding="false"
+            app:setPos="@{noteViewModel.note.priority}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            tools:itemCount="5"
+            tools:listitem="@layout/priority_item" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
