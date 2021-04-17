@@ -14,8 +14,11 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 
+import com.example.notekeeper.R;
 import com.example.notekeeper.databinding.FragmentNoteListBinding;
 import com.example.notekeeper.util.ScreenUtils;
 import com.example.notekeeper.viewmodel.NoteListViewModel;
@@ -25,6 +28,9 @@ public class NoteListFragment extends Fragment {
     private FragmentNoteListBinding binding;
     private NoteListViewModel noteListViewModel;
     private NoteListAdapter noteListAdapter;
+    private Animation slideDown;
+    private Animation slideUp;
+
 
     public NoteListFragment() {
     }
@@ -41,6 +47,10 @@ public class NoteListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         hideKeyboard(view);
+
+        slideDown = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.slide_down);
+
+        slideUp = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.slide_up);
 
         noteListViewModel = new ViewModelProvider(this, new ViewModelProvider.AndroidViewModelFactory(requireActivity().getApplication())).get(NoteListViewModel.class);
 
@@ -70,12 +80,15 @@ public class NoteListFragment extends Fragment {
 
             @Override
             public void onRowSelected(NoteListAdapter.NoteListViewHolder myViewHolder) {
-                View view = myViewHolder.getBinding().getRoot();
+                View view = myViewHolder.itemView;
 
                 view.getLocationOnScreen(noteLocation);
 
                 view.setOnClickListener(null);
                 view.setBackgroundColor(Color.GRAY);
+
+                binding.deleteIcon.startAnimation(slideUp);
+                binding.deleteBackView.startAnimation(slideUp);
 
                 binding.deleteIcon.setVisibility(View.VISIBLE);
                 binding.deleteBackView.setVisibility(View.VISIBLE);
@@ -83,8 +96,12 @@ public class NoteListFragment extends Fragment {
 
             @Override
             public void onRowClear(NoteListAdapter.NoteListViewHolder myViewHolder) {
+                binding.deleteIcon.startAnimation(slideDown);
+                binding.deleteBackView.startAnimation(slideDown);
+                
                 binding.deleteIcon.setVisibility(View.GONE);
                 binding.deleteBackView.setVisibility(View.GONE);
+                
                 myViewHolder.bind(noteListAdapter.getCurrentList().get(myViewHolder.getAdapterPosition()), noteClickListener);
             }
 
@@ -92,8 +109,12 @@ public class NoteListFragment extends Fragment {
             public boolean isInDeleteArea(float dx, float dy, NoteListAdapter.NoteListViewHolder myViewHolder, boolean isBeingDeleted) {
 
                 if(!isBeingDeleted && (dy + noteLocation[1]) >= (ScreenUtils.getScreenHeight(requireActivity()) - 300)){
+                    binding.deleteIcon.startAnimation(slideDown);
+                    binding.deleteBackView.startAnimation(slideDown);
+                    
                     binding.deleteIcon.setVisibility(View.GONE);
                     binding.deleteBackView.setVisibility(View.GONE);
+
                     noteListViewModel.getDeleteNote().setValue(noteListAdapter.getCurrentList().get(myViewHolder.getAdapterPosition()));
                     return true;
                 }
