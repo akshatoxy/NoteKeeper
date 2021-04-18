@@ -13,12 +13,10 @@ import java.util.List;
 
 public class NoteRepository {
     private NoteDao noteDao;
-    private LiveData<List<Note>> allNotes;
 
     public NoteRepository(Application application) {
         NoteDatabase noteDatabase = NoteDatabase.getInstance(application);
         this.noteDao = noteDatabase.noteDao();
-        this.allNotes = noteDao.getAllNotesOrderByID();
     }
 
     public void insert(Note note){
@@ -41,8 +39,18 @@ public class NoteRepository {
         return noteDao.getNote(noteId);
     }
 
-    public LiveData<List<Note>> getAllNotes() {
-        return allNotes;
+    public LiveData<List<Note>> getAllNotes(String sortBy) {
+        if(sortBy.equals("id"))
+            return noteDao.getAllNotesSortedByID();
+        else
+            return noteDao.getAllNotesSortedByPriority();
+    }
+
+    public LiveData<List<Note>> getSearchedNotes(String query, String sortBy){
+        if(sortBy.equals("id"))
+            return noteDao.getSearchedNotesByID(query);
+        else
+            return noteDao.getSearchedNotesByPriority(query);
     }
 
     private static class InsertNoteTask extends AsyncTask<Note, Void, Void>{

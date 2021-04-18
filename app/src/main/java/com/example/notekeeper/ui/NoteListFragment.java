@@ -1,17 +1,23 @@
 package com.example.notekeeper.ui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -20,6 +26,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.example.notekeeper.R;
 import com.example.notekeeper.databinding.FragmentNoteListBinding;
+import com.example.notekeeper.model.Note;
 import com.example.notekeeper.util.ScreenUtils;
 import com.example.notekeeper.viewmodel.NoteListViewModel;
 
@@ -30,6 +37,7 @@ public class NoteListFragment extends Fragment {
     private NoteListAdapter noteListAdapter;
     private Animation slideDown;
     private Animation slideUp;
+    private SearchView searchView;
 
 
     public NoteListFragment() {
@@ -39,6 +47,7 @@ public class NoteListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentNoteListBinding.inflate(inflater);
+        setHasOptionsMenu(true);
         return binding.getRoot();
     }
 
@@ -48,9 +57,9 @@ public class NoteListFragment extends Fragment {
 
         hideKeyboard(view);
 
-        slideDown = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.slide_down);
+        slideDown = AnimationUtils.loadAnimation(requireActivity().getApplicationContext(), R.anim.slide_down);
 
-        slideUp = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.slide_up);
+        slideUp = AnimationUtils.loadAnimation(requireActivity().getApplicationContext(), R.anim.slide_up);
 
         noteListViewModel = new ViewModelProvider(this, new ViewModelProvider.AndroidViewModelFactory(requireActivity().getApplication())).get(NoteListViewModel.class);
 
@@ -60,20 +69,6 @@ public class NoteListFragment extends Fragment {
         NoteClickListener noteClickListener = this::goToNote;
 
         noteListAdapter = new NoteListAdapter(noteClickListener);
-
-//        ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
-//            @Override
-//            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-//                return false;
-//            }
-//
-//            @Override
-//            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-//                noteListViewModel.getDeleteNote().setValue(noteListAdapter.getCurrentList().get(viewHolder.getAdapterPosition()));
-//            }
-//        });
-//
-//        touchHelper.attachToRecyclerView(binding.noteList);
 
         ItemTouchHelper touchHelper = new ItemTouchHelper(new NoteItemMoveCallback(new NoteItemMoveCallback.NoteItemTouchHelperContract() {
             private int[] noteLocation = new int[2];
@@ -138,6 +133,7 @@ public class NoteListFragment extends Fragment {
                 noteListViewModel.deleteNote(deleteNote);
             }
         });
+
     }
 
     private void goToNote(int noteId){
@@ -149,4 +145,81 @@ public class NoteListFragment extends Fragment {
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.note_list_menu, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+
+        searchView = (SearchView) searchItem.getActionView();
+        searchView.setSubmitButtonEnabled(true);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if(query != null){
+                    searchDatabase(query);
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                if(query != null){
+                    searchDatabase(query);
+                }
+                return true;
+            }
+        });
+    }
+
+    private void searchDatabase(String query) {
+        noteListViewModel.getSearchedNotes(query).observe(getViewLifecycleOwner(), notes -> {
+            noteListAdapter.submitList(notes);
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int itemId = item.getItemId();
+
+        if(itemId == R.id.action_sort){
+            showAlertDialog();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showAlertDialog() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+        String items[] = {"Latest","Priority"};
+        int checkedItem;
+        if(noteListViewModel.getSortBy().equals("id")){
+            checkedItem = 0;
+        }else{
+            checkedItem = 1;
+        }
+
+        alertDialog.setTitle("Sort By");
+        alertDialog.setSingleChoiceItems(items, checkedItem, (dialog, which) -> {
+            if(which == 0){
+                noteListViewModel.updateSortBy("id");
+            }else if(which == 1){
+                noteListViewModel.updateSortBy("priority");
+            }
+            if(searchView.isIconified()){
+                noteListViewModel.refreshNotes().observe(getViewLifecycleOwner(), notes -> {
+                    noteListAdapter.submitList(notes);
+                });
+            }else {
+                searchDatabase(searchView.getQuery().toString());
+            }
+
+        });
+
+        AlertDialog alert = alertDialog.create();;
+        alert.show();
+
+    }
 }

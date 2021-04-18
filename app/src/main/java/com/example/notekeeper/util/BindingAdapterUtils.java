@@ -13,7 +13,7 @@ import com.example.notekeeper.ui.NoteListAdapter;
 
 import java.util.List;
 
-public class BindingAdapters {
+public class BindingAdapterUtils {
 
     @BindingAdapter("listData")
     public static void bindRecyclerViewListItem(RecyclerView recyclerView, List<Note> allNotes){
