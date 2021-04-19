@@ -23,6 +23,8 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.notekeeper.R;
 import com.example.notekeeper.databinding.FragmentNoteListBinding;
@@ -154,6 +156,9 @@ public class NoteListFragment extends Fragment {
 
         searchView = (SearchView) searchItem.getActionView();
         searchView.setSubmitButtonEnabled(true);
+        searchView.setQueryHint("Search...");
+        EditText searchEditText = (EditText) searchView.findViewById(R.id.search_src_text);
+        searchEditText.setHintTextColor(getResources().getColor(R.color.text_color));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
