@@ -12,10 +12,12 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import com.example.notekeeper.R;
+import com.example.notekeeper.util.SharedPreferenceUtils;
 import com.example.notekeeper.viewmodel.NoteListViewModel;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,6 +30,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if(!SharedPreferenceUtils.getInstance(this).getIsIntroDisplayed()){
+            startActivity(new Intent(this, MyAppIntro.class));
+        }
+
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -36,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             toolbar.setTitle(destination.getLabel());
         });
+
+
     }
 
     @Override

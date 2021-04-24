@@ -30,6 +30,7 @@ import com.example.notekeeper.R;
 import com.example.notekeeper.databinding.FragmentNoteListBinding;
 import com.example.notekeeper.model.Note;
 import com.example.notekeeper.util.ScreenUtils;
+import com.example.notekeeper.util.SharedPreferenceUtils;
 import com.example.notekeeper.viewmodel.NoteListViewModel;
 
 public class NoteListFragment extends Fragment {
@@ -44,6 +45,7 @@ public class NoteListFragment extends Fragment {
 
     public NoteListFragment() {
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
